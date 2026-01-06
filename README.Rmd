@@ -22,11 +22,18 @@ This tool was developed by Robert Roose to summarize the Chinook TAMM used in th
 
 ## Installation
 
-You can install the development version of crayolaTAMM from [GitHub](https://github.com/) with:
+
+You can install the development version of crayolaTAMM from [R-universe](https://framverse.r-universe.dev/crayolaTAMM) with:
+
+```r
+install.packages('crayolaTAMM', repos = c('https://framverse.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+
+or from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
 pak::pak("cbedwards-dfw/crayolaTAMM")
 ```
-
 

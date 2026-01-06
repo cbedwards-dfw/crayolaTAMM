@@ -14,7 +14,13 @@ used in the Pacific Salmon season-setting process. The function
 ## Installation
 
 You can install the development version of crayolaTAMM from
-[GitHub](https://github.com/) with:
+[R-universe](https://framverse.r-universe.dev/crayolaTAMM) with:
+
+``` r
+install.packages('crayolaTAMM', repos = c('https://framverse.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+or from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
