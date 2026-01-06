@@ -23,5 +23,7 @@ Imports:
     stringr,
     TAMMsupport (>= 0.2.0),
     tidyr
+Remotes:
+  cbedwards-dfw/TAMMsupport
 URL: https://github.com/cbedwards-dfw/crayolaTAMM, https://framverse.r-universe.dev/crayolaTAMM, https://cbedwards-dfw.github.io/crayolaTAMM/
 BugReports: https://github.com/cbedwards-dfw/crayolaTAMM/issues
