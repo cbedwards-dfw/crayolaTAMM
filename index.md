@@ -1,0 +1,22 @@
+# crayolaTAMM
+
+This tool was developed by Robert Roose to summarize the Chinook TAMM
+used in the Pacific Salmon season-setting process. The function
+`make_crayola_tamm("tammname.xlsx")` will summarize the TAMM file named
+“tammname.xlsx”.
+
+## Installation
+
+You can install the development version of crayolaTAMM from
+[R-universe](https://framverse.r-universe.dev/crayolaTAMM) with:
+
+``` r
+install.packages('crayolaTAMM', repos = c('https://framverse.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+or from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("cbedwards-dfw/crayolaTAMM")
+```
