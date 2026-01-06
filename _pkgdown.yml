@@ -1,8 +1,3 @@
-name: Install GitHub dependencies
-  run: |
-    remotes::install_github("username/TAMMsupport")
-  shell: Rscript {0}
-
 url: https://cbedwards-dfw.github.io/crayolaTAMM/
 template:
   bootstrap: 5
