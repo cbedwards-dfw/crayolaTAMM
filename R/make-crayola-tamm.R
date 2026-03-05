@@ -58,6 +58,7 @@ make_crayola_tamm <- function(filepath,
   Thresholdsnew <- TAMMsupport::read_overview_complete(filepath)
   twoa_sheets <- TAMMsupport::read_2a_sheets(filepath)
   JDF_new <- TAMMsupport::read_jdf(filepath)
+  JDF_unmarked <- TAMMsupport::read_jdf_unmarked(filepath)
 
   temp_plot_paths <- NULL
 
@@ -343,15 +344,27 @@ make_crayola_tamm <- function(filepath,
       dplyr::filter(.data$stock == stock_data$tamm_2ac_label[i]) |>
       dplyr::select("fishery_joint_label", "value")
 
+    Cumu_natural_filtered <- twoa_sheets$aeq |>
+      dplyr::filter(.data$sheet == "2A_CU&M_N") |>
+      dplyr::filter(.data$stock == stock_data$tamm_2ac_label[i]) |>
+      dplyr::select("fishery_joint_label", "value")
+
     ## Remember, this sheet has a different labeling scheme, so diff column for stock filtering
     CumSP_filtered <- twoa_sheets$aeq |>
       dplyr::filter(.data$sheet == "2A_CU&M_N") |>
       dplyr::filter(.data$stock == stock_data$tamm_2ac_label_2[i]) |>
       dplyr::select("fishery_joint_label", "value")
 
-    if (stock %in% c("Dung", "Elwha", "Hoko")) {
+    if (stock %in% c("Elwha", "Hoko")) {
       ## Remember, this sheet has a different labeling scheme, so using $jdf_label for stock filter
       Filtered <- JDF_new$aeq |>
+        dplyr::filter(.data$stock == stock_data$jdf_label[i]) |>
+        dplyr::select("fishery_joint_label", "value")
+      colnames(Filtered) <- c("Fishery", "Stock")
+    }
+
+    if (stock == "Dung"){
+      Filtered <- JDF_unmarked$aeq |>
         dplyr::filter(.data$stock == stock_data$jdf_label[i]) |>
         dplyr::select("fishery_joint_label", "value")
       colnames(Filtered) <- c("Fishery", "Stock")
@@ -361,7 +374,14 @@ make_crayola_tamm <- function(filepath,
       Filtered <- CumSP_filtered
       colnames(Filtered) <- c("Fishery", "Stock")
     }
-    if (!stock %in% c("Dung", "Nisq", "Elwha", "Hoko")) {
+
+    if (stock %in% c("Nooksack")) {
+      Filtered <- cbind(Mrkd_filtered, Cumu_natural_filtered$value, Cumu_natural_filtered$value)
+      colnames(Filtered) <- c("Fishery", "Marked Impacts", "Unmarked Impacts", "Cumulative Impacts")
+    }
+
+
+    if (!stock %in% c("Dung", "Nisq", "Elwha", "Hoko", "Nooksack")) {
       Filtered <- cbind(Mrkd_filtered, Unmrkd_filtered$value, Cumu_filtered$value)
       colnames(Filtered) <- c("Fishery", "Marked Impacts", "Unmarked Impacts", "Cumulative Impacts")
     }
@@ -587,7 +607,7 @@ make_crayola_tamm <- function(filepath,
       ## Total ER row
       er_total_new <- Filtered_ER |>
         dplyr::filter(.data$Fishery == "Total Exploitation") |>
-        dplyr::mutate(.data$Fishery == "Total ER")
+        dplyr::mutate(Fishery = "Total ER")
 
       combined_df <- dplyr::bind_rows(
         combined_df,
@@ -712,8 +732,6 @@ make_crayola_tamm <- function(filepath,
   }
 
   ## Final bit ------------------------------------------------------------------
-  ## Have edited up to here. Need to talk to Robert to make sure I understand the goal
-  ## for the remaining section
 
   # Load the combined workbook
   sheet_name <- "Crayon Box"
@@ -730,6 +748,9 @@ make_crayola_tamm <- function(filepath,
   block_header_rows <- which(overview_df[, 1] == "Fishery") ## rows for the headers
   cols_for_headers <- which(!is.na(overview_df[2, ])) ## columns that have headers in them.
   class_col <- grep("Class", overview_df[2, ]) ## col with "class" etc.
+
+
+
 
   ## More formatting ======================
   # REMINDER!! MUST PROVIDE ROWS/COLS AS NUMBERS, NOT LOGICAL VEC! OTHERWISE, CRASHES EXCEL
@@ -827,7 +848,7 @@ make_crayola_tamm <- function(filepath,
   # Get actual row numbers in Excel
   diff_row <- which(overview_df[[fishery_col]] %in% c("Difference", "SUS Difference"))
 
-  er_row <- which(overview_df[[fishery_col]] %in% c("ER", "ER Total", "ER SUS", "ER PT-SUS", "Total ER Ceiling"))
+  er_row <- which(overview_df[[fishery_col]] %in% c("ER", "ER Total", "ER SUS", "ER PT-SUS", "Total ER"))
 
   # Create styles
   red_style <- openxlsx::createStyle(bgFill = "tomato")
